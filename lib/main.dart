@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/article.dart';
+import 'package:newsapp/detail_page.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,6 +17,9 @@ class MyApp extends StatelessWidget {
       initialRoute: NewsListPage.routeName,
       routes: {
         NewsListPage.routeName: (context) => NewsListPage(),
+        ArticleDetailPage.routeName: (context) => ArticleDetailPage(
+              article: ModalRoute.of(context).settings.arguments,
+            )
       },
     );
   }
@@ -55,6 +60,30 @@ class NewsListPage extends StatelessWidget {
       ),
       title: Text(article.title),
       subtitle: Text(article.author),
+      onTap: () {
+        Navigator.pushNamed(context, ArticleDetailPage.routeName,
+            arguments: article);
+      },
+    );
+  }
+}
+
+class ArticleWebView extends StatelessWidget {
+  static const routeName = '/article_web';
+
+  final String url;
+
+  const ArticleWebView({@required this.url});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('News app'),
+      ),
+      body: WebView(
+        initialUrl: url,
+      ),
     );
   }
 }
